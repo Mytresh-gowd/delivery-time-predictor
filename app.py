@@ -5,8 +5,8 @@ import pickle
 app = Flask(__name__)
 
 # Load trained model and scaler
-model = pickle.load(open("C:\\Users\\mytre\\OneDrive\\Desktop\\Project - ML 2025\\venv\\rf.pkl", "rb"))
-scaler = pickle.load(open("C:\\Users\\mytre\\OneDrive\\Desktop\\Project - ML 2025\\venv\\ss.pkl", "rb"))
+model = pickle.load(open("rf.pkl", "rb"))
+scaler = pickle.load(open("ss.pkl", "rb"))
 
 # Function to safely encode categorical values
 def safe_label_encode(le, val):
@@ -43,12 +43,12 @@ def predict():
         distance = float(request.form['distance'])
 
         # Load label encoders
-        le_weather = pickle.load(open("C:\\Users\\mytre\\OneDrive\\Desktop\\Project - ML 2025\\venv\\Weatherconditions.pkl", "rb"))
-        le_traffic = pickle.load(open("C:\\Users\\mytre\\OneDrive\\Desktop\\Project - ML 2025\\venv\\Road_traffic_density.pkl", "rb"))
-        le_order = pickle.load(open("C:\\Users\\mytre\\OneDrive\\Desktop\\Project - ML 2025\\venv\\Type_of_order.pkl", "rb"))
-        le_vehicle = pickle.load(open("C:\\Users\\mytre\\OneDrive\\Desktop\\Project - ML 2025\\venv\\Type_of_vehicle.pkl", "rb"))  # fixed filename
-        le_festival = pickle.load(open("C:\\Users\\mytre\\OneDrive\\Desktop\\Project - ML 2025\\venv\\Festival.pkl", "rb"))
-        le_city = pickle.load(open("C:\\Users\\mytre\\OneDrive\\Desktop\\Project - ML 2025\\venv\\City.pkl", "rb"))
+        le_weather = pickle.load(open("Weatherconditions.pkl", "rb"))
+        le_traffic = pickle.load(open("Road_traffic_density.pkl", "rb"))
+        le_order = pickle.load(open("Type_of_order.pkl", "rb"))
+        le_vehicle = pickle.load(open("Type_of_vehicle.pkl", "rb"))  # fixed filename
+        le_festival = pickle.load(open("Festival.pkl", "rb"))
+        le_city = pickle.load(open("City.pkl", "rb"))
 
         # Encode categorical features
         weather_enc = safe_label_encode(le_weather, weather)
