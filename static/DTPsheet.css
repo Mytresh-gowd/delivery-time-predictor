@@ -10,6 +10,12 @@ body{
 h1{
     text-align: center;
 }
+h2{
+    text-align: center;
+}
+footer{
+    text-align: center;
+}
 .info{
     display: contents;
     padding: 20px;
