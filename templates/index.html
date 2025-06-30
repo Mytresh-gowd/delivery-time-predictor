@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Delivery Time Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='DTPsheet.css') }}">
+    
+</head>
+<body>
+    <h1>Predict Delivery Time (in minutes)</h1>
+    <figure>
+        <img src="{{ url_for('static', filename='Both imagining.png') }}">
+    </figure>
+    <hr>
+    <div class = 'info'>
+        <p>"Delivery Time Predictor" can give the accurate time basis on 17 argument Values!</p>
+        <ul>
+            <li><strong>Delivery Person Age</strong>:                      It is one of the factor we can consider while doing delivery!</li>
+            
+            <li><strong>Delivery Person Ratings</strong>:                   It can resembles his Work in the time of Delivery!</li>
+            
+            <li><strong>Restaurant Latitude and Longitude</strong>:         These latitude and longitude of Restaurant can gives the exact location on the map can be useful to predict the accurate time!</li>
+            
+            <li><strong>Location Latitude and Longitude</strong>:           These latitude and longitude of Delivery Location can gives the exact location on the map can be useful to predict the accurate time!</li>
+            
+            <li><strong>Ordered and Time Picked</strong>:                   These two things are also plays a key role to predict the time!</li>
+            
+            <li><strong>Weather Conditions:</strong>                        Which contains multiple options: "Sunny","Stormy","Windy","Cloudy","Fog" and"Sand Storm"</li>
+            
+            <li><strong>Road Traffic Density:</strong>                      Which contains multiple options: "Low","Medium","High" and "Jam"</li>
+            
+            <li><strong>Vehicle Conditon:</strong>                          Here we can represent the condition basis from 0(Very Bad) to 5(Very Good) stage!</li>
+            
+            <li><strong>Type of Order:</strong>                             Which Contains the options: "Meal","Buffet","Drinks" and "Snack"</li>
+            
+            <li><strong>Type of Vehicle:</strong>                           Which Contains the three categories: "Scooter","Bike" and "Electric Scooter"</li>
+            
+            <li><strong>Multiple Deliveries:</strong>                       Which Contains the options: "0"(for single person),"1"(for a couple) and "2"(for a group)</li>
+            
+            <li><strong>Festival:</strong>                                  While Festival it causes the traffic so it contains the options "Yes" and "No"</li>
+            
+            <li><strong>City:</strong>                                      Which Contains "Metropolitian"(eg: Hyderabad), "Urban"(eg : Vijayawada) and "Semi Urban"(eg: Anantapuram)</li>
+            
+            <li><strong>Distance(km):</strong>                              You need to give the distance(in KM) between Restaurant and Delivery Location!</li>
+        </ul>
+        <img src="{{ url_for('static', filename='mid.png') }}">
+    </div>
+    
+    <hr>
+    <form action="/predict" method="POST" class = "Predict">
+        <label>Delivery Person Age:</label>
+        <input type="number" name="age" step="0.1" required><br><br>
+
+        <label>Delivery Person Ratings:</label>
+        <input type="number" name="ratings" step="0.1" required><br><br> <!-- fixed name -->
+
+        <label>Restaurant Latitude:</label>
+        <input type="number" name="rest_lat" step="0.000001" required><br><br> <!-- fixed name -->
+
+        <label>Restaurant Longitude:</label>
+        <input type="number" name="rest_lon" step="0.000001" required><br><br> <!-- fixed name -->
+
+        <label>Delivery Location Latitude:</label>
+        <input type="number" name="del_lat" step="0.000001" required><br><br> <!-- fixed name -->
+
+        <label>Delivery Location Longitude:</label>
+        <input type="number" name="del_lon" step="0.000001" required><br><br> <!-- fixed name -->
+
+        <label>Time Ordered (e.g. 13.5 for 1:30 PM):</label>
+        <input type="number" name="time_ordered" step="0.1" required><br><br>
+
+        <label>Time Picked (e.g. 14.0 for 2:00 PM):</label>
+        <input type="number" name="time_picked" step="0.1" required><br><br>
+
+        <label>Weather Conditions:</label>
+        <select name="weather" required>
+            <option value="Sunny">Sunny</option>
+            <option value="Stormy">Stormy</option>
+            <option value="Windy">Windy</option>
+            <option value="Cloudy">Cloudy</option>
+            <option value="Fog">Fog</option>
+            <option value="Sandstorms">Sandstorms</option>
+        </select><br><br>
+
+        <label>Road Traffic Density:</label>
+        <select name="traffic" required>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+            <option value="Jam">Jam</option>
+        </select><br><br>
+
+        <label>Vehicle Condition (1 to 5):</label>
+        <input type="number" name="vehicle_condition" min="0" max="5" required><br><br>
+
+        <label>Type of Order:</label>
+        <select name="order_type" required>
+            <option value="Snack">Snack</option>
+            <option value="Meal">Meal</option>
+            <option value="Drinks">Drinks</option>
+            <option value="Buffet">Buffet</option>
+        </select><br><br>
+
+        <label>Type of Vehicle:</label>
+        <select name="vehicle_type" required>
+            <option value="Bike">Bike</option>
+            <option value="Scooter">Scooter</option>
+            <option value="Electric Scooter">Electric Scooter</option>
+        </select><br><br>
+
+        <label>Multiple Deliveries (0, 1, 2, ...):</label>
+        <input type="number" name="multiple_deliveries" min="0" required><br><br>
+
+        <label>Festival:</label>
+        <select name="festival" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br><br>
+
+        <label>City:</label>
+        <select name="city" required>
+            <option value="Metropolitian">Metropolitian</option>
+            <option value="Urban">Urban</option>
+            <option value="Semi-Urban">Semi-Urban</option>
+        </select><br><br>
+
+        <label>Distance (in km):</label>
+        <input type="number" name="distance" step="0.01" required><br><br>
+
+        <input type="submit" value="Predict Delivery Time">
+    </form>
+
+    {% if prediction_text %}
+        <h2>{{ prediction_text }}</h2>
+    {% endif %}
+    <figure>
+        <img src="{{ url_for('static', filename='Adobe Express - file.png') }}">
+    </figure>
+</body>
+</html>
