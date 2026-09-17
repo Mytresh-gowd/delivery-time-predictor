@@ -1,11 +1,192 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Error</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Error | Pro System</title>
+    
+    <!-- System-like Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- PRO DEVICE THEME VARIABLES (ERROR STATE) --- */
+        :root {
+            --bg-color: #0d1117;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 75, 75, 0.15); /* Red tinted border */
+            --error-glow: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #8b949e;
+            --console-bg: rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(255, 65, 108, 0.1), transparent 40%),
+                radial-gradient(circle at 50% 100%, rgba(255, 75, 43, 0.08), transparent 40%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* --- ERROR WINDOW CARD --- */
+        .error-window {
+            max-width: 650px;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(255, 65, 108, 0.15);
+            padding: 60px 40px;
+            text-align: center;
+            animation: slideInDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideInDown {
+            from { opacity: 0; transform: scale(0.95) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* --- SYSTEM ALERT INDICATOR --- */
+        .system-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 75, 43, 0.1);
+            border: 1px solid rgba(255, 75, 43, 0.3);
+            padding: 8px 16px;
+            border-radius: 30px;
+            color: #ff4b2b;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #ff4b2b;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff4b2b;
+            animation: pulse-error 1.2s infinite;
+        }
+
+        @keyframes pulse-error {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 75, 43, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 75, 43, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 75, 43, 0); }
+        }
+
+        /* --- ERROR TITLES --- */
+        h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: var(--error-glow);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            margin-bottom: 25px;
+            letter-spacing: -0.5px;
+        }
+
+        /* --- DIAGNOSTIC CONSOLE (For the actual error text) --- */
+        .diagnostic-console {
+            background: var(--console-bg);
+            border: 1px solid rgba(255, 75, 43, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 35px;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        .diagnostic-console p {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            color: #ff8a8a;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .diagnostic-console::before {
+            content: "Exception Log:";
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* --- ACTION BUTTON --- */
+        .back-btn {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .back-btn:hover {
+            background: var(--error-glow);
+            color: #fff;
+            border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 65, 108, 0.3);
+        }
+
+        .back-btn:active {
+            transform: translateY(1px);
+        }
+    </style>
 </head>
 <body>
-    <h3>Error occurred during prediction:</h3>
-    <p>{{ error }}</p>
-    <a href="/">Try Again</a>
+
+    <div class="error-window">
+        
+        <!-- System Failure Indicator -->
+        <div class="system-status">
+            <div class="status-dot"></div>
+            System Exception
+        </div>
+
+        <!-- Error Heading -->
+        <h3>Computation Failed</h3>
+
+        <!-- Diagnostic Console containing the Flask {{ error }} -->
+        <div class="diagnostic-console">
+            <p>{{ error }}</p>
+        </div>
+
+        <!-- Try Again Button -->
+        <a href="/" class="back-btn">Reconfigure & Try Again</a>
+
+    </div>
+
 </body>
 </html>
