@@ -1,10 +1,159 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Prediction Result</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computation Result | Pro System</title>
+    
+    <!-- System-like Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- PRO DEVICE THEME VARIABLES --- */
+        :root {
+            --bg-color: #0d1117;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --primary-glow: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --success-glow: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #8b949e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(79, 172, 254, 0.15), transparent 40%),
+                radial-gradient(circle at 50% 100%, rgba(76, 75, 162, 0.1), transparent 40%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* --- RESULT WINDOW CARD --- */
+        .result-window {
+            max-width: 650px;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 60px 40px;
+            text-align: center;
+            animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes scaleUpFade {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* --- SYSTEM STATUS INDICATOR --- */
+        .system-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(11, 163, 96, 0.1);
+            border: 1px solid rgba(11, 163, 96, 0.3);
+            padding: 8px 16px;
+            border-radius: 30px;
+            color: #3cba92;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #3cba92;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #3cba92;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(60, 186, 146, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(60, 186, 146, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(60, 186, 146, 0); }
+        }
+
+        /* --- PREDICTION TEXT --- */
+        h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--primary-glow);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            margin-bottom: 40px;
+            letter-spacing: -1px;
+        }
+
+        @media (max-width: 600px) {
+            h2 { font-size: 2.2rem; }
+        }
+
+        /* --- ACTION BUTTON --- */
+        .back-btn {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .back-btn:hover {
+            background: var(--text-primary);
+            color: var(--bg-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn:active {
+            transform: translateY(1px);
+        }
+    </style>
 </head>
 <body>
-    <h2>{{ prediction_text }}</h2>
-    <a href="/">Go Back</a>
+
+    <div class="result-window">
+        
+        <!-- Tech-style success indicator -->
+        <div class="system-status">
+            <div class="status-dot"></div>
+            Computation Complete
+        </div>
+
+        <!-- The actual prediction result from Flask -->
+        <h2>{{ prediction_text }}</h2>
+
+        <!-- The Go Back Button -->
+        <a href="/" class="back-btn">Return to Dashboard</a>
+
+    </div>
+
 </body>
 </html>
