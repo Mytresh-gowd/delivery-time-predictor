@@ -3,143 +3,448 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Delivery Time Prediction</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='DTPsheet.css') }}">
+    <title>Delivery Time Prediction | Pro System</title>
     
+    <!-- System-like Font for that Native Device feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- PRO DEVICE THEME VARIABLES --- */
+        :root {
+            --bg-color: #0d1117; /* Deep Space Gray */
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --primary-glow: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #8b949e;
+            --input-bg: rgba(0, 0, 0, 0.2);
+            --focus-ring: rgba(79, 172, 254, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(76, 75, 162, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 242, 254, 0.15), transparent 25%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* --- DEVICE/DASHBOARD CONTAINER --- */
+        .app-window {
+            max-width: 1100px;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(40px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* --- HEADER --- */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--primary-glow);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -1px;
+            margin-bottom: 25px;
+        }
+
+        .image-container {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.02);
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin: 0 auto 30px auto;
+            max-width: 800px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            display: block;
+        }
+
+        /* --- SPECS / INFO SECTION --- */
+        .system-specs {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .system-specs p.lead {
+            font-size: 1.1rem;
+            color: #a3b3cc;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            list-style: none;
+        }
+
+        .specs-grid li {
+            background: var(--glass-bg);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border-left: 3px solid #4facfe;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            transition: transform 0.2s ease;
+        }
+
+        .specs-grid li:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .specs-grid li strong {
+            display: block;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        /* --- FORM GRID (Pro Layout) --- */
+        form.Predict {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        @media (max-width: 768px) {
+            form.Predict {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input, 
+        .form-group select {
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+            appearance: none; /* Removes default browser styling */
+        }
+
+        /* Custom Dropdown Arrow for Select */
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+        
+        .form-group select option {
+            background-color: #1c2128;
+            color: #fff;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 4px var(--focus-ring);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        /* --- SUBMIT BUTTON --- */
+        .submit-wrapper {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        input[type="submit"] {
+            background: var(--primary-glow);
+            color: #000;
+            border: none;
+            padding: 16px 48px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(79, 172, 254, 0.5);
+            filter: brightness(1.1);
+        }
+
+        input[type="submit"]:active {
+            transform: translateY(1px);
+        }
+
+        /* --- PREDICTION OUTPUT DISPLAY --- */
+        .prediction-result {
+            margin-top: 35px;
+            padding: 25px;
+            background: rgba(79, 172, 254, 0.1);
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(79, 172, 254, 0.15);
+            animation: slideUpFade 0.5s ease-out;
+        }
+
+        .prediction-result h2 {
+            font-size: 1.8rem;
+            color: #4facfe;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #4facfe;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #00f2fe;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Predict Delivery Time (in minutes)</h1>
-    <figure>
-        <img src="{{ url_for('static', filename='Both imagining.png') }}">
-    </figure>
-    <hr>
-    <div class = 'info'>
-        <p>"Delivery Time Predictor" can give the accurate time basis on 17 argument Values!</p>
-        <ul>
-            <li><strong>Delivery Person Age</strong>:                      It is one of the factor we can consider while doing delivery!</li>
+
+    <div class="app-window">
+        
+        <header>
+            <h1>Delivery Time Engine</h1>
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='Both imagining.png') }}" alt="Delivery Concept">
+            </div>
+        </header>
+
+        <!-- System Specifications (Formerly Info Section) -->
+        <section class="system-specs">
+            <p class="lead">Machine Learning Model utilizing 14 real-time data parameters to calculate exact ETA.</p>
+            <ul class="specs-grid">
+                <li><strong>Age & Ratings</strong> Delivery personnel biometrics and historical performance data.</li>
+                <li><strong>Geospatial Data</strong> Exact GPS Lat/Long mapping for Restaurant and Destination.</li>
+                <li><strong>Time Deltas</strong> Algorithmic calculation based on Order Time vs. Pickup Time.</li>
+                <li><strong>Weather Logic</strong> Adjusts for Sunny, Stormy, Windy, Cloudy, Fog, or Sandstorms.</li>
+                <li><strong>Traffic Density</strong> Real-time routing adjustment (Low, Medium, High, Jam).</li>
+                <li><strong>Vehicle Telemetry</strong> Vehicle type (Scooter/Bike/EV) and physical condition rating (0-5).</li>
+                <li><strong>Order Metrics</strong> Analyzes load constraints (Snack, Meal, Drinks, Buffet).</li>
+                <li><strong>Logistics</strong> Accounts for multiple grouped deliveries (0, 1, 2+) and Festival surges.</li>
+                <li><strong>City Zoning</strong> Calibrated for Metropolitan, Urban, and Semi-Urban infrastructures.</li>
+                <li><strong>Distance</strong> Total route distance calculated in Kilometers.</li>
+            </ul>
+        </section>
+
+        <!-- Prediction Form -->
+        <form action="/predict" method="POST" class="Predict">
             
-            <li><strong>Delivery Person Ratings</strong>:                   It can resembles his Work in the time of Delivery!</li>
-            
-            <li><strong>Restaurant Latitude and Longitude</strong>:         These latitude and longitude of Restaurant can gives the exact location on the map can be useful to predict the accurate time!</li>
-            
-            <li><strong>Location Latitude and Longitude</strong>:           These latitude and longitude of Delivery Location can gives the exact location on the map can be useful to predict the accurate time!</li>
-            
-            <li><strong>Ordered and Time Picked</strong>:                   These two things are also plays a key role to predict the time!</li>
-            
-            <li><strong>Weather Conditions:</strong>                        Which contains multiple options: "Sunny","Stormy","Windy","Cloudy","Fog" and"Sand Storm"</li>
-            
-            <li><strong>Road Traffic Density:</strong>                      Which contains multiple options: "Low","Medium","High" and "Jam"</li>
-            
-            <li><strong>Vehicle Conditon:</strong>                          Here we can represent the condition basis from 0(Very Bad) to 5(Very Good) stage!</li>
-            
-            <li><strong>Type of Order:</strong>                             Which Contains the options: "Meal","Buffet","Drinks" and "Snack"</li>
-            
-            <li><strong>Type of Vehicle:</strong>                           Which Contains the three categories: "Scooter","Bike" and "Electric Scooter"</li>
-            
-            <li><strong>Multiple Deliveries:</strong>                       Which Contains the options: "0"(for single person),"1"(for a couple) and "2"(for a group)</li>
-            
-            <li><strong>Festival:</strong>                                  While Festival it causes the traffic so it contains the options "Yes" and "No"</li>
-            
-            <li><strong>City:</strong>                                      Which Contains "Metropolitian"(eg: Hyderabad), "Urban"(eg : Vijayawada) and "Semi Urban"(eg: Anantapuram)</li>
-            
-            <li><strong>Distance(km):</strong>                              You need to give the distance(in KM) between Restaurant and Delivery Location!</li>
-        </ul>
-        <img src="{{ url_for('static', filename='mid.png') }}">
-    </div>
-    
-    <hr>
-    <form action="/predict" method="POST" class = "Predict">
-        <label>Delivery Person Age:</label>
-        <input type="number" name="age" step="0.1" required><br><br>
+            <div class="form-group">
+                <label>Driver Age</label>
+                <input type="number" name="age" step="0.1" placeholder="e.g. 28" required>
+            </div>
 
-        <label>Delivery Person Ratings:</label>
-        <input type="number" name="ratings" step="0.1" required><br><br> <!-- fixed name -->
+            <div class="form-group">
+                <label>Driver Rating</label>
+                <input type="number" name="ratings" step="0.1" placeholder="e.g. 4.8" required>
+            </div>
 
-        <label>Restaurant Latitude:</label>
-        <input type="number" name="rest_lat" step="0.000001" required><br><br> <!-- fixed name -->
+            <div class="form-group">
+                <label>Restaurant Latitude</label>
+                <input type="number" name="rest_lat" step="0.000001" placeholder="e.g. 17.412" required>
+            </div>
 
-        <label>Restaurant Longitude:</label>
-        <input type="number" name="rest_lon" step="0.000001" required><br><br> <!-- fixed name -->
+            <div class="form-group">
+                <label>Restaurant Longitude</label>
+                <input type="number" name="rest_lon" step="0.000001" placeholder="e.g. 78.435" required>
+            </div>
 
-        <label>Delivery Location Latitude:</label>
-        <input type="number" name="del_lat" step="0.000001" required><br><br> <!-- fixed name -->
+            <div class="form-group">
+                <label>Destination Latitude</label>
+                <input type="number" name="del_lat" step="0.000001" placeholder="e.g. 17.441" required>
+            </div>
 
-        <label>Delivery Location Longitude:</label>
-        <input type="number" name="del_lon" step="0.000001" required><br><br> <!-- fixed name -->
+            <div class="form-group">
+                <label>Destination Longitude</label>
+                <input type="number" name="del_lon" step="0.000001" placeholder="e.g. 78.471" required>
+            </div>
 
-        <label>Time Ordered (e.g. 13.5 for 1:30 PM):</label>
-        <input type="number" name="time_ordered" step="0.1" required><br><br>
+            <div class="form-group">
+                <label>Time Ordered (HH.MM)</label>
+                <input type="number" name="time_ordered" step="0.1" placeholder="e.g. 13.5 (1:30 PM)" required>
+            </div>
 
-        <label>Time Picked (e.g. 14.0 for 2:00 PM):</label>
-        <input type="number" name="time_picked" step="0.1" required><br><br>
+            <div class="form-group">
+                <label>Time Picked (HH.MM)</label>
+                <input type="number" name="time_picked" step="0.1" placeholder="e.g. 14.0 (2:00 PM)" required>
+            </div>
 
-        <label>Weather Conditions:</label>
-        <select name="weather" required>
-            <option value="Sunny">Sunny</option>
-            <option value="Stormy">Stormy</option>
-            <option value="Windy">Windy</option>
-            <option value="Cloudy">Cloudy</option>
-            <option value="Fog">Fog</option>
-            <option value="Sandstorms">Sandstorms</option>
-        </select><br><br>
+            <div class="form-group">
+                <label>Atmosphere / Weather</label>
+                <select name="weather" required>
+                    <option value="Sunny">Sunny</option>
+                    <option value="Stormy">Stormy</option>
+                    <option value="Windy">Windy</option>
+                    <option value="Cloudy">Cloudy</option>
+                    <option value="Fog">Fog</option>
+                    <option value="Sandstorms">Sandstorms</option>
+                </select>
+            </div>
 
-        <label>Road Traffic Density:</label>
-        <select name="traffic" required>
-            <option value="Low">Low</option>
-            <option value="Medium">Medium</option>
-            <option value="High">High</option>
-            <option value="Jam">Jam</option>
-        </select><br><br>
+            <div class="form-group">
+                <label>Traffic Density</label>
+                <select name="traffic" required>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Jam">Jam</option>
+                </select>
+            </div>
 
-        <label>Vehicle Condition (1 to 5):</label>
-        <input type="number" name="vehicle_condition" min="0" max="5" required><br><br>
+            <div class="form-group">
+                <label>Vehicle Condition</label>
+                <input type="number" name="vehicle_condition" min="0" max="5" placeholder="Rate 0 to 5" required>
+            </div>
 
-        <label>Type of Order:</label>
-        <select name="order_type" required>
-            <option value="Snack">Snack</option>
-            <option value="Meal">Meal</option>
-            <option value="Drinks">Drinks</option>
-            <option value="Buffet">Buffet</option>
-        </select><br><br>
+            <div class="form-group">
+                <label>Order Class</label>
+                <select name="order_type" required>
+                    <option value="Snack">Snack</option>
+                    <option value="Meal">Meal</option>
+                    <option value="Drinks">Drinks</option>
+                    <option value="Buffet">Buffet</option>
+                </select>
+            </div>
 
-        <label>Type of Vehicle:</label>
-        <select name="vehicle_type" required>
-            <option value="Bike">Bike</option>
-            <option value="Scooter">Scooter</option>
-            <option value="Electric Scooter">Electric Scooter</option>
-        </select><br><br>
+            <div class="form-group">
+                <label>Transport Type</label>
+                <select name="vehicle_type" required>
+                    <option value="Bike">Bike</option>
+                    <option value="Scooter">Scooter</option>
+                    <option value="Electric Scooter">Electric Scooter</option>
+                </select>
+            </div>
 
-        <label>Multiple Deliveries (0, 1, 2, ...):</label>
-        <input type="number" name="multiple_deliveries" min="0" required><br><br>
+            <div class="form-group">
+                <label>Concurrent Deliveries</label>
+                <input type="number" name="multiple_deliveries" min="0" placeholder="0, 1, 2..." required>
+            </div>
 
-        <label>Festival:</label>
-        <select name="festival" required>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-        </select><br><br>
+            <div class="form-group">
+                <label>Festival / Event Day</label>
+                <select name="festival" required>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+            </div>
 
-        <label>City:</label>
-        <select name="city" required>
-            <option value="Metropolitian">Metropolitian</option>
-            <option value="Urban">Urban</option>
-            <option value="Semi-Urban">Semi-Urban</option>
-        </select><br><br>
+            <div class="form-group">
+                <label>City Zone</label>
+                <select name="city" required>
+                    <option value="Metropolitian">Metropolitan</option>
+                    <option value="Urban">Urban</option>
+                    <option value="Semi-Urban">Semi-Urban</option>
+                </select>
+            </div>
 
-        <label>Distance (in km):</label>
-        <input type="number" name="distance" step="0.01" required><br><br>
+            <div class="form-group" style="grid-column: span 1;">
+                <label>Route Distance (KM)</label>
+                <input type="number" name="distance" step="0.01" placeholder="e.g. 5.4" required>
+            </div>
 
-        <input type="submit" value="Predict Delivery Time">
-    </form>
+            <!-- Submit Button -->
+            <div class="submit-wrapper">
+                <input type="submit" value="Calculate ETA">
+            </div>
+        </form>
 
-    {% if prediction_text %}
-        <h2>{{ prediction_text }}</h2>
-    {% endif %}
-    <figure>
-        <img src="{{ url_for('static', filename='Adobe Express - file.png') }}">
-    </figure>
-     <footer>
-        <p>Delivery Time Predictor. All rights <a href = "https://github.com/Mytresh-gowd">@MytreshGowd</a> reserved.</p>
+        <!-- Prediction Result Display -->
+        {% if prediction_text %}
+            <div class="prediction-result">
+                <h2>{{ prediction_text }}</h2>
+            </div>
+        {% endif %}
+
+        <div class="image-container" style="margin-top: 40px; box-shadow: none; max-width: 400px;">
+            <img src="{{ url_for('static', filename='Adobe Express - file.png') }}" alt="System Status">
+        </div>
+
+    </div> <!-- End App Window -->
+
+    <footer>
+        <p>Delivery Time Engine v2.0 • Designed by <a href="https://github.com/Mytresh-gowd" target="_blank">@MytreshGowd</a></p>
     </footer>
+
 </body>
 </html>
